@@ -2,8 +2,9 @@ var request = require('request');
 var token = require('./secret.js').GITHUB_TOKEN;
 var fs = require('fs');
 var https = require('https');
-var argOne = process.argv[2];
-var argTwo = process.argv[3];
+var terminalArgs = process.argv;
+var argOne = terminalArgs[2];
+var argTwo = terminalArgs[3];
 
 
 function getRepoContributors(repoOwner, repoName, cb) {
@@ -15,26 +16,30 @@ function getRepoContributors(repoOwner, repoName, cb) {
   }
 };
   request(options, function(err, res, body) {
-    var repos = JSON.parse(body);
-    repos.forEach(function(repo) {
-      downloadImageByURL(repo.avatar_url, `avatars/,${repo.login}.jpeg`);
-    });
-    cb(err, body);
+    var array = JSON.parse(body);
+    if(terminalArgs.length !== 4) {
+        console.log("Not enough arguments!!!! You require two inputs");
+      } else {
+      array.forEach(function(repo) {
+        downloadImageByURL(repo.avatar_url, `avatars/${repo.login}.jpeg`);
+      });
+      cb(err, body);
+    }
   });
 }
 
 function downloadImageByURL(url, filepath) {
   request.get(url)
     .on('error', function (err) {
-      throw err;
+        throw err;
     })
     .on('response', function (response) {
+      console.log('Downloading image...');
       console.log(`
       Response Status Code: ${response.statusCode}
       Response Status Message: ${response.statusMessage}
       Response Headers: ${response.headers['content-type']}
       `);
-      console.log('Downloading image...');
     })
     .on('end', function  () {
       console.log('Download complete.');
