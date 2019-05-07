@@ -6,7 +6,7 @@ var terminalArgs = process.argv;
 var argOne = terminalArgs[2];
 var argTwo = terminalArgs[3];
 
-
+// collects urls, parses them into an object. Finally calls the download function which will populate all the jpegs into a folder
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
   url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
@@ -17,9 +17,11 @@ function getRepoContributors(repoOwner, repoName, cb) {
 };
   request(options, function(err, res, body) {
     var array = JSON.parse(body);
+    // create condition to check for sufficient arguments
     if(terminalArgs.length !== 4) {
         console.log("Not enough arguments!!!! You require two inputs");
       } else {
+      // iterate through the urls and call function to import avatar images
       array.forEach(function(repo) {
         downloadImageByURL(repo.avatar_url, `avatars/${repo.login}.jpeg`);
       });
@@ -28,6 +30,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
   });
 }
 
+// build function to be called that utilizes the urls requested from the github page and then pulls the jpegs into a folder
 function downloadImageByURL(url, filepath) {
   request.get(url)
     .on('error', function (err) {
@@ -48,8 +51,6 @@ function downloadImageByURL(url, filepath) {
 }
 
 getRepoContributors(argOne, argTwo, function(err, result) {
-  // console.log("Errors:", err);
-  // console.log("Result:", result);
 
 });
 
