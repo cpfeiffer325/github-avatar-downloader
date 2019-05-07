@@ -18,7 +18,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
     var repos = JSON.parse(body);
     repos.forEach(function(repo) {
       downloadImageByURL(repo.avatar_url, `avatars/,${repo.login}.jpeg`);
-
     });
     cb(err, body);
   });
