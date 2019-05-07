@@ -11,12 +11,14 @@ function getRepoContributors(repoOwner, repoName, cb) {
     'Authorization': 'token' + token
   }
 };
-
   request(options, function(err, res, body) {
-    body = JSON.parse(body);
-    cb(err, body);
+    var repos = JSON.parse(body);
+    repos.forEach(function(repo) {
+      downloadImageByURL(repo.avatar_url, `avatars/,${repo.login}.jpeg`);
+
     });
-    // console.log(repo);
+    cb(err, body);
+  });
 }
 
 function downloadImageByURL(url, filepath) {
@@ -41,11 +43,7 @@ function downloadImageByURL(url, filepath) {
 getRepoContributors("jquery", "jquery", function(err, result) {
   // console.log("Errors:", err);
   // console.log("Result:", result);
-    result.forEach(function(repo) {
-      console.log(repo.avatar_url);
-  });
 
 });
 
 console.log('Welcome to the GitHub Avatar Downloader!');
-downloadImageByURL('https://avatars0.githubusercontent.com/u/1615?v=4', 'avatars/new_person.jpg');
