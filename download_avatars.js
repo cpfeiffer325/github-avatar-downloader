@@ -2,6 +2,9 @@ var request = require('request');
 var token = require('./secret.js').GITHUB_TOKEN;
 var fs = require('fs');
 var https = require('https');
+var argOne = process.argv[2];
+var argTwo = process.argv[3];
+
 
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
@@ -40,7 +43,7 @@ function downloadImageByURL(url, filepath) {
     .pipe(fs.createWriteStream(filepath));
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+getRepoContributors(argOne, argTwo, function(err, result) {
   // console.log("Errors:", err);
   // console.log("Result:", result);
 
